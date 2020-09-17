@@ -24,3 +24,4 @@
 
 1. Run `pip3 install -r requirements.txt`
 2. Open `http://127.0.0.1:8008/`
+3. Enjoy
