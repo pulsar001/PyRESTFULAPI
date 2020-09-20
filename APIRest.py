@@ -20,13 +20,15 @@ api = Api(app)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
 
+# Donne une ID unique par utilisateur et la stock dans la bdd
 class AjouterUtilisateur(Resource):
     def get(self):
         conn = db_connect.connect()
         id_user = str(uuid.uuid4())
         query = conn.execute("insert into utilisateurs (id_user, unites) values (?, ?)", (id_user, int(0)))
-        return {'id_user': id_user, 'unites': 0} # Donne une ID unique par utilisateur et la stock dans la bdd
+        return {'id_user': id_user, 'unites': 0}
 
+# Affiche la liste des utilisateurs
 class VoirUtilisateurs(Resource):
     def get(self):
         conn = db_connect.connect()
@@ -34,6 +36,7 @@ class VoirUtilisateurs(Resource):
         result = {'donnees': [dict(zip(tuple (query.keys()) ,i)) for i in query.cursor]}
         return jsonify(result)
 
+# Affiche un utilisateur et ses unites par ID
 class VoirUtilisateurID(Resource):
     def get(self, id_user):
         conn = db_connect.connect()
@@ -41,6 +44,7 @@ class VoirUtilisateurID(Resource):
         result = {'donnees': [dict(zip(tuple (query.keys()) ,i)) for i in query.cursor]}
         return jsonify(result)
 
+# Modifie les unites d'un utilisateur
 class ModifierUnites(Resource):
     def get(self, id_user, typing):
         conn = db_connect.connect()
@@ -56,12 +60,13 @@ class Defaut(Resource):
         info = '''Aucun argument'''
         return info
 
+# Routing
 api.add_resource(Defaut, '/')
 api.add_resource(AjouterUtilisateur, '/AjouterUtilisateur')
 api.add_resource(VoirUtilisateurs, '/VoirUtilisateurs')
 api.add_resource(VoirUtilisateurID, '/VoirUtilisateurID/<id_user>')
 api.add_resource(ModifierUnites, '/ModifierUnites/<id_user>/<typing>')
 
-
+# Port d'écoute
 if __name__ == '__main__':
      app.run(port='8008')
